@@ -54,20 +54,20 @@ class MealPlanApp {
         try {
             this.currentPlan = planId;
             
-            // Dynamically load the plan data file
-            const script = document.createElement('script');
-            script.src = `data/plan-${planId}.js`;
+            // Fetch the plan file as text to avoid const redefinition issues
+            const response = await fetch(`data/plan-${planId}.js`);
+            if (!response.ok) {
+                throw new Error(`Failed to load plan: ${planId}`);
+            }
             
-            // Wait for script to load
-            await new Promise((resolve, reject) => {
-                script.onload = resolve;
-                script.onerror = () => reject(new Error(`Failed to load plan: ${planId}`));
-                document.head.appendChild(script);
-            });
-
-            // planData is now available globally from the loaded script
-            if (typeof planData !== 'undefined') {
-                this.planData = planData;
+            const fileContent = await response.text();
+            
+            // Extract the planData object by executing the code in an isolated scope
+            // This avoids const redefinition errors when switching weeks
+            const extractData = new Function(fileContent + '; return planData;');
+            this.planData = extractData();
+            
+            if (this.planData) {
                 this.renderCurrentView();
             } else {
                 throw new Error('Plan data not found');
@@ -75,7 +75,7 @@ class MealPlanApp {
             
         } catch (error) {
             console.error('Error loading plan:', error);
-            this.showError('Failed to load meal plan');
+            this.showError(`Failed to load meal plan: ${error.message}`);
         }
     }
 
@@ -104,7 +104,17 @@ class MealPlanApp {
     setupWeekSelector() {
         const weekSelect = document.getElementById('weekSelect');
         weekSelect.addEventListener('change', async (e) => {
-            await this.loadPlan(e.target.value);
+            // Show loading state
+            const originalText = document.getElementById('weekTitle').textContent;
+            document.getElementById('weekTitle').textContent = 'Loading...';
+            
+            try {
+                await this.loadPlan(e.target.value);
+            } catch (error) {
+                // If loading fails, revert the selector to the working week
+                weekSelect.value = this.currentPlan;
+                document.getElementById('weekTitle').textContent = originalText;
+            }
         });
     }
 
@@ -386,3 +396,11 @@ let app;
 document.addEventListener('DOMContentLoaded', () => {
     app = new MealPlanApp();
 });
+
+
+
+
+
+
+
+
