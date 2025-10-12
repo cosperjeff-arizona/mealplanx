@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mise en Place - Meal Planning</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2c5f2d;
+            --primary-light: #97bc62;
+            --accent: #ff6b35;
+            --text: #2d3142;
+            --text-light: #4f5d75;
+            --bg: #ffffff;
+            --bg-alt: #f8f9fa;
+            --border: #e1e8ed;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 8px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .week-selector {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .week-selector select {
+            padding: 0.5rem 1rem;
+            border: 2px solid white;
+            border-radius: 8px;
+            background: white;
+            color: var(--primary);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* Navigation */
+        nav {
+            background: var(--bg-alt);
+            border-bottom: 2px solid var(--border);
+            padding: 0 2rem;
+            position: sticky;
+            top: 60px;
+            z-index: 90;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+        }
+
+        .nav-btn {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 1rem;
+            cursor: pointer;
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover {
+            color: var(--primary);
+            background: rgba(44, 95, 45, 0.05);
+        }
+
+        .nav-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Main Container */
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            min-height: calc(100vh - 300px);
+        }
+
+        /* View Sections */
+        .view {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Home View */
+        .week-overview {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px var(--shadow);
+            margin-bottom: 1rem;
+        }
+
+        .week-meta {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
+        }
+
+        .meals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .meal-card {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .meal-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .meal-card.special {
+            background: var(--bg-alt);
+            border-style: dashed;
+            cursor: default;
+        }
+
+        .meal-card.special:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .meal-day {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .meal-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0.5rem 0;
+            color: var(--primary);
+        }
+
+        .meal-description {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .meal-notes {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 0.75rem;
+            margin-top: 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        /* Shopping List */
+        .shopping-lists {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .shopping-category {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .shopping-category h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .shopping-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .shopping-item:last-child {
+            border-bottom: none;
+        }
+
+        .shopping-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 1rem;
+            cursor: pointer;
+        }
+
+        .shopping-item.checked label {
+            text-decoration: line-through;
+            color: var(--text-light);
+        }
+
+        .shopping-item label {
+            cursor: pointer;
+            flex: 1;
+        }
+
+        /* Prep View */
+        .prep-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .prep-section h2 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .prep-intro {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .prep-list {
+            list-style: none;
+        }
+
+        .prep-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 1rem;
+            background: var(--bg-alt);
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+        }
+
+        .prep-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 1rem;
+            margin-top: 2px;
+            cursor: pointer;
+        }
+
+        .prep-item.checked label {
+            text-decoration: line-through;
+            color: var(--text-light);
+        }
+
+        .prep-item label {
+            cursor: pointer;
+            flex: 1;
+        }
+
+        /* Recipe View */
+        .recipe-detail {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px var(--shadow);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .recipe-header {
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .recipe-title {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .recipe-meta {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .recipe-section {
+            margin-bottom: 2rem;
+        }
+
+        .recipe-section h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .recipe-section ul, .recipe-section ol {
+            padding-left: 1.5rem;
+        }
+
+        .recipe-section li {
+            margin-bottom: 0.75rem;
+            line-height: 1.8;
+        }
+
+        .recipe-section ol li {
+            padding-left: 0.5rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-alt);
+            color: var(--text);
+            border: 2px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            border-color: var(--primary);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        /* Print Button */
+        .print-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 56px;
+            height: 56px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px var(--shadow);
+            transition: all 0.2s;
+            z-index: 50;
+        }
+
+        .print-btn:hover {
+            transform: scale(1.1);
+            background: var(--primary-light);
+        }
+
+        /* Recipes Index */
+        .recipes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .recipe-card {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .recipe-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-light);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header, nav, main {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .meals-grid,
+            .shopping-lists,
+            .recipes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-content {
+                padding: 0;
+            }
+
+            .print-btn {
+                bottom: 1rem;
+                right: 1rem;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            header nav, .print-btn, .action-buttons {
+                display: none !important;
+            }
+
+            .view {
+                display: block !important;
+            }
+
+            .view:not(.active) {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+            }
+
+            .meal-card, .shopping-category, .prep-section, .recipe-detail {
+                break-inside: avoid;
+                page-break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>🍽️ Mise en Place</h1>
+            <div class="week-selector">
+                <label for="weekSelect" style="font-weight: 500;">Week:</label>
+                <select id="weekSelect">
+                    <option value="">Loading...</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="nav-content">
+            <button class="nav-btn active" data-view="home">🏠 Home</button>
+            <button class="nav-btn" data-view="shopping">🛒 Shopping</button>
+            <button class="nav-btn" data-view="prep">🔪 Sunday Prep</button>
+            <button class="nav-btn" data-view="recipes">📖 Recipes</button>
+        </div>
+    </nav>
+
+    <main id="app">
+        <!-- Home View -->
+        <div id="home-view" class="view active">
+            <div class="week-overview">
+                <h2 id="weekTitle">Loading...</h2>
+                <p class="week-meta" id="weekMeta"></p>
+            </div>
+            <div class="meals-grid" id="mealsGrid"></div>
+        </div>
+
+        <!-- Shopping View -->
+        <div id="shopping-view" class="view">
+            <div class="week-overview">
+                <h2>Shopping List</h2>
+                <p class="week-meta">Check off items as you shop</p>
+            </div>
+            <div class="shopping-lists" id="shoppingLists"></div>
+        </div>
+
+        <!-- Prep View -->
+        <div id="prep-view" class="view">
+            <div class="prep-section">
+                <h2 id="prepTitle">Sunday Prep</h2>
+                <p class="prep-intro" id="prepIntro"></p>
+                <h3>Ingredients & Prep</h3>
+                <ul class="prep-list" id="prepIngredients"></ul>
+                <h3 style="margin-top: 2rem;">Additional Steps</h3>
+                <ul class="prep-list" id="prepSteps"></ul>
+            </div>
+        </div>
+
+        <!-- Recipes View -->
+        <div id="recipes-view" class="view">
+            <div class="week-overview">
+                <h2>This Week's Recipes</h2>
+                <p class="week-meta">Click any recipe to view details</p>
+            </div>
+            <div class="recipes-grid" id="recipesGrid"></div>
+        </div>
+
+        <!-- Recipe Detail View -->
+        <div id="recipe-detail-view" class="view">
+            <div class="recipe-detail" id="recipeDetail"></div>
+        </div>
+    </main>
+
+    <button class="print-btn" onclick="window.print()" title="Print this page">🖨️</button>
+
+    <!-- Load plan manifest first, then app logic -->
+    <script src="plan-manifest.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
