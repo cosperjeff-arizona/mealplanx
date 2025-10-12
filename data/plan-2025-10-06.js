@@ -1,4 +1,4 @@
-const planData = {
+window.planData = {
   "title": "October 6, 2025",
   "meta": "5 meals • 2 adults + 1 toddler",
   "shopping": {
