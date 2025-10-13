@@ -201,60 +201,19 @@ window.planData = {
       "day": "Friday",
       "date": "10/17/25",
       "id": "friday",
-      "name": "Tri-Tip with Chimichurri & Roasted Potatoes",
-      "description": "A steakhouse-quality meal at home. Don't slice the steak until it has fully rested!",
-      "schedulingNotes": "Rain plan: Reverse-sear indoors. Use the chimichurri from Sunday prep.",
-      "isSpecial": false,
-      "recipe": {
-        "cardTitle": "Tri-Tip & Chimichurri",
-        "title": "Reverse-Seared Tri-Tip with Chimichurri & Roasted Potatoes",
-        "meta": "Prep: 10 min • Cook: 45–60 min • Equipment: Sheet pan + 12\" skillet",
-        "ingredients": [
-          "1.5–2 lb Tri-tip steak",
-          "2 lbs Yukon Gold potatoes, cut into 1-inch chunks",
-          "2 tbsp olive oil",
-          "Chimichurri (from Sunday prep)",
-          "Salt & coarse black pepper"
-        ],
-        "steps": [
-          "Preheat oven to 275°F. Place seasoned tri-tip on a wire rack inside a sheet pan.",
-          "Toss potatoes with olive oil and salt. Arrange around the tri-tip.",
-          "Roast for 40-50 minutes, until steak reads 120-125°F for medium-rare.",
-          "Remove and rest steak for 10-15 minutes. Crisp potatoes at 425°F if needed.",
-          "Heat a heavy skillet over high heat. Sear the tri-tip for 60-90 seconds per side.",
-          "Rest steak another 5 minutes, then slice thinly against the grain. Serve with potatoes and chimichurri."
-        ]
-      }
+      "name": "Flagstaff",
+      "description": "",
+      "schedulingNotes": "Family is traveling to Flagstaff for a retirement party",
+      "isSpecial": true,
+      "recipe": null
     },
     {
       "day": "Saturday",
       "date": "10/18/25",
       "id": "saturday",
-      "name": "Smash Burgers & Fries",
-      "description": "Classic, crispy smash burgers to use up the leftover hamburger buns from Tuesday.",
-      "schedulingNotes": "Fun weekend meal. Can be made on a griddle, grill, or in a large skillet.",
-      "isSpecial": false,
-      "recipe": {
-        "cardTitle": "Classic Smash Burgers",
-        "title": "Smash Burgers & Fries",
-        "meta": "Prep: 15 min • Cook: 15 min • Equipment: Griddle or 12\" skillet",
-        "ingredients": [
-          "1 lb ground beef (85/15)",
-          "4 slices American or cheddar cheese",
-          "4 hamburger buns, toasted",
-          "Toppings: lettuce, sliced tomato, onion, pickles",
-          "Potatoes for fries (or frozen)",
-          "Salt & pepper"
-        ],
-        "steps": [
-          "If making fresh fries, start those first (roast at 425°F or air fry).",
-          "Divide beef into 4 equal portions and gently roll into balls.",
-          "Heat a skillet or griddle over high heat. Place beef on the hot surface.",
-          "Press down firmly with a spatula until it's a thin patty. Season the top.",
-          "Cook for 90 seconds. Scrape, flip, and top with cheese.",
-          "Cook for another 60 seconds. Serve immediately on toasted buns."
-        ]
-      }
-    }
-  ]
+     "name": "Flagstaff",
+      "description": "",
+      "schedulingNotes": "Family will be in Flagstaff.",
+      "isSpecial": true,
+      "recipe": null
 };
