@@ -216,4 +216,4 @@ window.planData = {
       "schedulingNotes": "Family will be in Flagstaff.",
       "isSpecial": true,
       "recipe": null
-};
+}
